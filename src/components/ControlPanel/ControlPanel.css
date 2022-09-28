@@ -81,6 +81,17 @@
   opacity: .5;
 }
 
+.controlPanel__uniqId-text {
+  margin: 20px auto;
+  width: fit-content;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.controlPanel__uniqId-number {
+  font-weight: 900;
+}
+
 @media screen and (max-width: 450px){
   .controlPanel__form {
     width: 260px;

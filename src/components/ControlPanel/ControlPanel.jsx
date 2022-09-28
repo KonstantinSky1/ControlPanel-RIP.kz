@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './ControlPanel.css';
 
 import { useFormWithValidation } from '../../hooks/UseForm.js';
 import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
+import generateUniqId from '../../utils/generateUniqId.js';
 
 function ControlPanel() {
-  const defaultData = { // сейчас все vulues инпутов это строки. Надо ли менять ?
+  const defaultData = {
     name: '',
     surname: '',
     birthday: '',
@@ -25,7 +26,9 @@ function ControlPanel() {
     color: 'red'
   }
 
-  const { values, handleChange, errors, isValid } = useFormWithValidation(defaultData);
+  const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation(defaultData);
+
+  const [uniqId, setUniqId] = useState(0);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -44,17 +47,25 @@ function ControlPanel() {
       cemetry_description
     } = values;
 
-    console.log(name,
-      surname,
-      birthday,
-      description,
-      cause_of_death,
-      date_of_death,
-      burial_coordinates_latitude,
-      burial_coordinates_longitude,
-      cemetery_coordinates_latitude,
-      cemetery_coordinates_longitude,
-      cemetry_description);
+    let id = generateUniqId(); // уникальный id
+    // добавить проверку: Если есть такой id в общей базе? то запустить функцию еще раз
+
+    setUniqId(id); // устанавливаем в стейт номер id чтобы отобразить на странице
+
+    // console.log(name,
+    //   surname,
+    //   birthday,
+    //   description,
+    //   cause_of_death,
+    //   date_of_death,
+    //   burial_coordinates_latitude,
+    //   burial_coordinates_longitude,
+    //   cemetery_coordinates_latitude,
+    //   cemetery_coordinates_longitude,
+    //   cemetry_description);
+
+    // сбрасываем форму:
+    resetForm();
   }
 
   return (
@@ -77,8 +88,6 @@ function ControlPanel() {
                 type="text"
                 name="name"
                 placeholder="Имя..."
-                minLength="1"
-                required
               />
               <ErrorMessage
                 errorMessage={errors.name}
@@ -95,8 +104,6 @@ function ControlPanel() {
                 type="text"
                 name="surname"
                 placeholder="Фамилия..."
-                minLength="1"
-                required
               />
               <ErrorMessage
                 errorMessage={errors.surname}
@@ -113,8 +120,6 @@ function ControlPanel() {
                 type="date"
                 name="birthday"
                 placeholder="Дата рождения..."
-                minLength="1"
-                required
               />
               <ErrorMessage
                 errorMessage={errors.birthday}
@@ -131,8 +136,6 @@ function ControlPanel() {
                 type="text"
                 name="description"
                 placeholder="Описание..."
-                minLength="1"
-                required
               >
               </textarea>
               <ErrorMessage
@@ -150,8 +153,6 @@ function ControlPanel() {
                 type="text"
                 name="cause_of_death"
                 placeholder="Причина смерти..."
-                minLength="1"
-                required
               >
               </textarea>
               <ErrorMessage
@@ -169,8 +170,6 @@ function ControlPanel() {
                 type="date"
                 name="date_of_death"
                 placeholder="Дата смерти..."
-                minLength="1"
-                required
               />
               <ErrorMessage
                 errorMessage={errors.date_of_death}
@@ -259,8 +258,6 @@ function ControlPanel() {
                 type="text"
                 name="cemetry_description"
                 placeholder="Описание для захоронения..."
-                minLength="1"
-                required
               >
               </textarea>
               <ErrorMessage
@@ -281,6 +278,10 @@ function ControlPanel() {
             </button>
           </div>
         </form>
+
+        {
+          !!uniqId && (<p className="controlPanel__uniqId-text">Ваш уникальный id: <span className="controlPanel__uniqId-number">{uniqId}</span></p>)
+        }
       </div>
     </div>
   );
