@@ -1,0 +1,56 @@
+.controlPanel {
+  padding: 50px 0 50px 0;
+}
+
+.controlPanel__container {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 90%;
+}
+
+.controlPanel__form {
+  margin: 0 auto;
+  padding: 0 0 10px 0;
+  width: 396px;
+  border: 1px solid rgb(229, 234, 238);
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px 2px #eee;
+  overflow: hidden;
+}
+
+.controlPanel__form-label {
+  display: block;
+  margin: 20px 0 0 0;
+  padding: 0 10px 0 10px;
+}
+
+.controlPanel__form-label-span {
+  display: block;
+  margin: 0 0 5px 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.controlPanel__form-input {
+  width: 100%;
+  padding: 10px 5px;
+  border: 1px solid rgb(229, 234, 238);
+  border-radius: 5px;
+}
+
+.controlPanel__form-textarea {
+  resize: none;
+  width: none;
+  min-height: 120px;
+  overflow: auto;
+}
+
+.controlPanel__form-input:focus {
+  border-color: rgb(252, 255, 67);
+}
+
+@media screen and (max-width: 450px){
+  .controlPanel__form {
+    width: 260px;
+  }
+}
