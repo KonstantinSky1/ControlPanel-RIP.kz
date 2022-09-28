@@ -8,6 +8,13 @@
   max-width: 90%;
 }
 
+.controlPanel__title {
+  margin: 0 auto 20px;
+  width: fit-content;
+  font-weight: 700;
+  font-size: 1.5em;
+}
+
 .controlPanel__form {
   margin: 0 auto;
   padding: 0 0 10px 0;
@@ -16,6 +23,10 @@
   border-radius: 5px;
   box-shadow: 2px 2px 5px 2px #eee;
   overflow: hidden;
+}
+
+.controlPanel__form-inputs-block {
+  margin: 0 0 30px 0;
 }
 
 .controlPanel__form-label {
@@ -47,6 +58,27 @@
 
 .controlPanel__form-input:focus {
   border-color: rgb(252, 255, 67);
+}
+
+.controlPanel__form-submit-button-block {
+  padding: 0 10px 0 10px;
+}
+
+.controlPanel__form-submit-button {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFFFFF;
+  border: none;
+  background-color: #4285F4;
+  border-radius: 3px;
+  padding: 13px 0 15px 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.controlPanel__form-submit-button:hover {
+  opacity: .5;
 }
 
 @media screen and (max-width: 450px){
