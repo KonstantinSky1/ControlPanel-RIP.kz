@@ -50,8 +50,12 @@ function ControlPanel() {
     cemetery_coordinates_latitude: 0,
     cemetery_coordinates_longitude: 0,
     cemetry_description: '',
-    id: 0
+    id: 0,
+    file: []
   });
+  const [drag, setDrag] = useState(false);
+  const [file, setFile] = useState([]);
+  console.log("🚀 ~ file: ControlPanel.jsx ~ line 58 ~ ControlPanel ~ file", file)
 
   useEffect(() => {
     const handleClosePopup = (event) => {
@@ -66,6 +70,27 @@ function ControlPanel() {
       window.removeEventListener('keydown', handleClosePopup);
     }
   }, []);
+
+  function dragStartHandler(e) {
+    e.preventDefault();
+
+    setDrag(true);
+  }
+
+  function dragLeaveHandler(e) {
+    e.preventDefault();
+
+    setDrag(false);
+  }
+
+  function onDropHandler(e) {
+    e.preventDefault();
+
+    let file = [...e.dataTransfer.files];
+
+    setFile([file[0]]);
+    setDrag(false);
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -84,6 +109,7 @@ function ControlPanel() {
       cemetry_description
     } = values;
 
+    let fileImage = file;
     let id = generateUniqId();
     // добавить проверку: Если есть такой id в общей базе, то запустить функцию еще раз ?
 
@@ -100,8 +126,10 @@ function ControlPanel() {
       cemetery_coordinates_latitude: +cemetery_coordinates_latitude,
       cemetery_coordinates_longitude: +cemetery_coordinates_longitude,
       cemetry_description,
-      id
+      id,
+      fileImage
     });
+    // также можно отправлять на сервер все данные через formData
 
     setViewState({
       latitude: +cemetery_coordinates_latitude,
@@ -309,18 +337,44 @@ function ControlPanel() {
                 style={errorInputStyle}
               />
             </label>
-          </div>
 
+            <div className="controlPanel__form-image-block">
+              {
+                (file.length === 0)
+                ? (drag
+                    ? <div
+                        className="controlPanel__form-drop-area"
+                        onDragStart={(e) => dragStartHandler(e)}
+                        onDragLeave={(e) => dragLeaveHandler(e)}
+                        onDragOver={(e) => dragStartHandler(e)}
+                        onDrop={(e) => onDropHandler(e)}
+                      >
+                        Отпустите файл
+                      </div>
+                    : <div
+                        className="controlPanel__form-drop-area"
+                        onDragStart={(e) => dragStartHandler(e)}
+                        onDragLeave={(e) => dragLeaveHandler(e)}
+                        onDragOver={(e) => dragStartHandler(e)}
+                      >
+                        Перетащите файл, чтобы загрузить
+                      </div>)
+                : <div className="controlPanel__form-drop-area">
+                    <img src={file[0]} alt="Фото" />
+                  </div>
+              }
+            </div>
+          </div>
           <div className="controlPanel__form-submit-button-block">
-              <button
-                onClick={() => {document.location.href = '#mapbox-map'}}
-                disabled={!isValid}
-                className="controlPanel__form-submit-button"
-                type="submit"
-                style={!isValid ? {backgroundColor: '#b4b6b8', cursor: 'auto', opacity: '1'} : null}
-              >
-                Отправить
-              </button>
+            <button
+              onClick={() => {document.location.href = '#mapbox-map'}}
+              disabled={!isValid}
+              className="controlPanel__form-submit-button"
+              type="submit"
+              style={!isValid ? {backgroundColor: '#b4b6b8', cursor: 'auto', opacity: '1'} : null}
+            >
+              Отправить
+            </button>
           </div>
         </form>
 
