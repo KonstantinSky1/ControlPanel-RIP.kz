@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './ControlPanel.css';
 
 import { useFormWithValidation } from '../../hooks/UseForm.js';
 import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import generateUniqId from '../../utils/generateUniqId.js';
+import Map, { Marker, Popup } from 'react-map-gl';
+import markerPic from '../../images/icons/iconMarker.png';
 
 function ControlPanel() {
   const defaultData = {
@@ -29,6 +32,40 @@ function ControlPanel() {
   const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation(defaultData);
 
   const [uniqId, setUniqId] = useState(0);
+  const [viewState, setViewState] = useState({
+    latitude: 43.2566700,
+    longitude: 76.9286100,
+    zoom: 11
+  });
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [ripData, setRipData] = useState({
+    name: '',
+    surname: '',
+    birthday: '',
+    description: '',
+    cause_of_death: '',
+    date_of_death: '',
+    burial_coordinates_latitude: 0,
+    burial_coordinates_longitude: 0,
+    cemetery_coordinates_latitude: 0,
+    cemetery_coordinates_longitude: 0,
+    cemetry_description: '',
+    id: 0
+  });
+
+  useEffect(() => {
+    const handleClosePopup = (event) => {
+      if (event.key === "Escape") {
+        setSelectedPost(null);
+      }
+    }
+
+    window.addEventListener('keydown', handleClosePopup);
+
+    return () => {
+      window.removeEventListener('keydown', handleClosePopup);
+    }
+  }, []);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -47,24 +84,30 @@ function ControlPanel() {
       cemetry_description
     } = values;
 
-    let id = generateUniqId(); // уникальный id
-    // добавить проверку: Если есть такой id в общей базе? то запустить функцию еще раз
+    let id = generateUniqId();
+    // добавить проверку: Если есть такой id в общей базе, то запустить функцию еще раз ?
 
-    setUniqId(id); // устанавливаем в стейт номер id чтобы отобразить на странице
+    setUniqId(id);
+    setRipData({
+      name,
+      surname,
+      birthday,
+      description,
+      cause_of_death,
+      date_of_death,
+      burial_coordinates_latitude: +burial_coordinates_latitude,
+      burial_coordinates_longitude: +burial_coordinates_longitude,
+      cemetery_coordinates_latitude: +cemetery_coordinates_latitude,
+      cemetery_coordinates_longitude: +cemetery_coordinates_longitude,
+      cemetry_description,
+      id
+    });
 
-    // console.log(name,
-    //   surname,
-    //   birthday,
-    //   description,
-    //   cause_of_death,
-    //   date_of_death,
-    //   burial_coordinates_latitude,
-    //   burial_coordinates_longitude,
-    //   cemetery_coordinates_latitude,
-    //   cemetery_coordinates_longitude,
-    //   cemetry_description);
-
-    // сбрасываем форму:
+    setViewState({
+      latitude: +cemetery_coordinates_latitude,
+      longitude: +cemetery_coordinates_longitude
+    });
+    
     resetForm();
   }
 
@@ -75,8 +118,9 @@ function ControlPanel() {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="controlPanel__form"
+          className="controlPanel__form controlPanel__form_margin"
           name="controlPanel-form"
+          id="controlPanel-form"
         >
           <div className="controlPanel__form-inputs-block">
             <label className="controlPanel__form-label">
@@ -268,20 +312,83 @@ function ControlPanel() {
           </div>
 
           <div className="controlPanel__form-submit-button-block">
-            <button
-              disabled={!isValid}
-              className="controlPanel__form-submit-button"
-              type="submit"
-              style={!isValid ? {backgroundColor: '#b4b6b8', cursor: 'auto', opacity: '1'} : null}
-            >
-              Отправить
-            </button>
+              <button
+                onClick={() => {document.location.href = '#mapbox-map'}}
+                disabled={!isValid}
+                className="controlPanel__form-submit-button"
+                type="submit"
+                style={!isValid ? {backgroundColor: '#b4b6b8', cursor: 'auto', opacity: '1'} : null}
+              >
+                Отправить
+              </button>
           </div>
         </form>
 
         {
           !!uniqId && (<p className="controlPanel__uniqId-text">Ваш уникальный id: <span className="controlPanel__uniqId-number">{uniqId}</span></p>)
         }
+
+        <div className="mapbox-block">
+          <Map
+            {...viewState}
+            onMove={evt => setViewState(evt.viewState)}
+            style={{width: '100%', height: '100vh'}}
+            mapStyle="mapbox://styles/mapbox/streets-v9"
+            mapboxAccessToken="pk.eyJ1Ijoia29uc3RhbnRpbnNreSIsImEiOiJjbDhiYW8zNDQwcDBjM3FuM3MwMXg3MDBqIn0.4WDqm5CpXmykKPm_b1W-LA"
+            id="mapbox-map"
+          >
+            <Marker
+              longitude={ripData.cemetery_coordinates_longitude}
+              latitude={ripData.cemetery_coordinates_latitude}
+              anchor="bottom"
+            >
+              <button
+                onClick={(e) => setSelectedPost(ripData)}
+                type="button"
+                className="markerButton"
+              >
+                <img
+                  src={markerPic}
+                  alt="Marker Icon"
+                />
+              </button>
+            </Marker>
+            {
+              selectedPost ? (
+                <Popup
+                  closeOnClick={false}
+                  longitude={ripData.cemetery_coordinates_longitude}
+                  latitude={ripData.cemetery_coordinates_latitude}
+                  onClose={() => setSelectedPost(null)}
+                >
+                  <div className="popup">
+                    <div className="popup__text-block">
+                      <div className="popup__text-block-title">
+                        <p>Имя:</p>
+                        <p className="popup__text">{ripData.name}</p>
+                      </div>
+                      <div className="popup__text-block-title">
+                        <p>Фамилия:</p>
+                        <p className="popup__text">{ripData.surname}</p>
+                      </div>
+                      <div className="popup__text-block-title">
+                        <p>Дата рождения:</p>
+                        <p className="popup__text">{ripData.birthday}</p>
+                      </div>
+                      <div className="popup__text-block-title">
+                        <p>Дата смерти:</p>
+                        <p className="popup__text">{ripData.date_of_death}</p>
+                      </div>
+                      <p className="popup__small-text">id: {ripData.id}</p>
+                    </div>
+                    <button type="button" className="popup__button-route">Проложить маршрут</button>
+                  </div>
+                </Popup>
+              ) : null
+            }
+          </Map>
+          <a href="#controlPanel-form" className="link-up"></a>
+        </div>
       </div>
     </div>
   );
