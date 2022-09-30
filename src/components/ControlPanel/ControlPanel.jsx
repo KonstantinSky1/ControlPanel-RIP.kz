@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './ControlPanel.css';
@@ -10,6 +10,8 @@ import Map, { Marker, Popup } from 'react-map-gl';
 import markerPic from '../../images/icons/iconMarker.png';
 
 function ControlPanel() {
+  const regExCoordinates = "^[0-9-.]*$"
+
   const defaultData = {
     name: '',
     surname: '',
@@ -53,9 +55,9 @@ function ControlPanel() {
     id: 0,
     file: []
   });
-  const [drag, setDrag] = useState(false);
-  const [file, setFile] = useState([]);
-  console.log("🚀 ~ file: ControlPanel.jsx ~ line 58 ~ ControlPanel ~ file", file)
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const filePicker = useRef(null);
 
   useEffect(() => {
     const handleClosePopup = (event) => {
@@ -71,25 +73,15 @@ function ControlPanel() {
     }
   }, []);
 
-  function dragStartHandler(e) {
-    e.preventDefault();
-
-    setDrag(true);
+  function fileUploadHandleChange(event) {
+    event.preventDefault();
+    setSelectedFile(event.target.files[0]);
   }
 
-  function dragLeaveHandler(e) {
+  function handlePickFile(e) {
     e.preventDefault();
-
-    setDrag(false);
-  }
-
-  function onDropHandler(e) {
-    e.preventDefault();
-
-    let file = [...e.dataTransfer.files];
-
-    setFile([file[0]]);
-    setDrag(false);
+    //При клике на button, по факту клик производим на input
+    filePicker.current.click();
   }
 
   function handleSubmit(event) {
@@ -109,7 +101,7 @@ function ControlPanel() {
       cemetry_description
     } = values;
 
-    let fileImage = file;
+    let fileImage = selectedFile;
     let id = generateUniqId();
     // добавить проверку: Если есть такой id в общей базе, то запустить функцию еще раз ?
 
@@ -129,14 +121,19 @@ function ControlPanel() {
       id,
       fileImage
     });
-    // также можно отправлять на сервер все данные через formData
+    // нужно отправлять на сервер все данные через formData!
+    // т.к. файл не отправляется через JSON
+
+    let formData = new FormData();
+    // formData.append('fileImage', fileImage); //брать все данные с ripData
 
     setViewState({
       latitude: +cemetery_coordinates_latitude,
       longitude: +cemetery_coordinates_longitude
     });
-    
+
     resetForm();
+    setSelectedFile(null);
   }
 
   return (
@@ -260,6 +257,7 @@ function ControlPanel() {
                 placeholder="Введите в формате: ХХ.ХХХХХХХ"
                 minLength="1"
                 required
+                pattern={regExCoordinates}
               />
               <ErrorMessage
                 errorMessage={errors.burial_coordinates_latitude}
@@ -278,6 +276,7 @@ function ControlPanel() {
                 placeholder="Введите в формате: ХХ.ХХХХХХХ"
                 minLength="1"
                 required
+                pattern={regExCoordinates}
               />
               <ErrorMessage
                 errorMessage={errors.burial_coordinates_longitude}
@@ -286,7 +285,7 @@ function ControlPanel() {
             </label>
 
             <label className="controlPanel__form-label">
-              <span className="controlPanel__form-label-span">Координаты захоронении широта:</span>
+              <span className="controlPanel__form-label-span">Координаты захоронения широта:</span>
               <input
                 className="controlPanel__form-input"
                 onChange={handleChange}
@@ -296,6 +295,7 @@ function ControlPanel() {
                 placeholder="Введите в формате: ХХ.ХХХХХХХ"
                 minLength="1"
                 required
+                pattern={regExCoordinates}
               />
               <ErrorMessage
                 errorMessage={errors.cemetery_coordinates_latitude}
@@ -304,7 +304,7 @@ function ControlPanel() {
             </label>
 
             <label className="controlPanel__form-label">
-              <span className="controlPanel__form-label-span">Координаты захоронении долгота:</span>
+              <span className="controlPanel__form-label-span">Координаты захоронения долгота:</span>
               <input
                 className="controlPanel__form-input"
                 onChange={handleChange}
@@ -314,6 +314,7 @@ function ControlPanel() {
                 placeholder="Введите в формате: ХХ.ХХХХХХХ"
                 minLength="1"
                 required
+                pattern={regExCoordinates}
               />
               <ErrorMessage
                 errorMessage={errors.cemetery_coordinates_longitude}
@@ -339,29 +340,17 @@ function ControlPanel() {
             </label>
 
             <div className="controlPanel__form-image-block">
+              <button onClick={handlePickFile} className="controlPanel__form-pickfile-button">Выбрать файл</button>
+              <input
+                className="controlPanel__form-fileInput-hidden"
+                ref={filePicker}
+                type="file"
+                onChange={fileUploadHandleChange}
+                accept="image/*,.png,.jpg,.gif,.web"
+              />
+
               {
-                (file.length === 0)
-                ? (drag
-                    ? <div
-                        className="controlPanel__form-drop-area"
-                        onDragStart={(e) => dragStartHandler(e)}
-                        onDragLeave={(e) => dragLeaveHandler(e)}
-                        onDragOver={(e) => dragStartHandler(e)}
-                        onDrop={(e) => onDropHandler(e)}
-                      >
-                        Отпустите файл
-                      </div>
-                    : <div
-                        className="controlPanel__form-drop-area"
-                        onDragStart={(e) => dragStartHandler(e)}
-                        onDragLeave={(e) => dragLeaveHandler(e)}
-                        onDragOver={(e) => dragStartHandler(e)}
-                      >
-                        Перетащите файл, чтобы загрузить
-                      </div>)
-                : <div className="controlPanel__form-drop-area">
-                    <img src={file[0]} alt="Фото" />
-                  </div>
+                selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Фото" className="controlPanel__form-image"/>
               }
             </div>
           </div>

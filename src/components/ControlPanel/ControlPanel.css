@@ -190,16 +190,40 @@
 .controlPanel__form-image-block {
   margin: 20px 0 0 0;
   padding: 0 10px 0 10px;
-  display: flex;
 }
 
-.controlPanel__form-drop-area {
-  border: 2px dashed #000;
-  width: 100%;
-  height: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.controlPanel__form-image {
+  display: block;
+  max-width: 100%;
+  margin: 10px auto 0;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+.controlPanel__form-pickfile-button {
+  background-color: rgb(6, 170, 88);
+  color: #fff;
+  padding: 7px 5px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.controlPanel__form-pickfile-button:hover {
+  opacity: .5;
+}
+
+.controlPanel__form-pickfile-button:active {
+  top: 1px;
+}
+
+.controlPanel__form-fileInput-hidden {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 @media screen and (max-width: 450px){
