@@ -1,0 +1,19 @@
+.page-navigation {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  margin: 0 auto 20px;
+}
+
+.page-navigation__slash {
+  margin: 0 10px 0 10px;
+}
+
+.page-navigation__link {
+  font-weight: 700;
+}
+
+.disabled-navigation-link {
+  pointer-events: none;
+  opacity: .2;
+}

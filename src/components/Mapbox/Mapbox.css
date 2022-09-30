@@ -1,0 +1,89 @@
+.mapbox-block {
+  position: relative;
+}
+
+.link-up {
+  position: absolute;
+  bottom: 50px;
+  right: 25px;
+  color: black;
+  z-index: 99999;
+  cursor: pointer;
+  background: url('../../images/icons/up-arrow.png') no-repeat;
+  width: 24px;
+  height: 24px;
+}
+
+.link-up:hover {
+  opacity: .5;
+}
+
+.mapboxgl-popup-close-button {
+  top: -27px;
+  right: -27px;
+  color: transparent;
+  font-size: 0;
+  width: 30px;
+  height: 30px;
+  background: transparent url('../../images/icons/closeButton.svg') no-repeat;
+}
+
+.markerButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.markerButton img {
+  width: 24px;
+  height: 24px;
+}
+
+.popup {
+  min-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  line-height: 1.25em;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mapboxgl-popup-content {
+  width: 250px;
+}
+
+.popup__text-block {
+  flex: 1 1 auto;
+}
+
+.popup__text-block-title {
+  margin: 0 0 5px 0;
+}
+
+.popup__text {
+  font-weight: 700;
+}
+
+.popup__small-text {
+  font-size: .8em;
+  color: rgb(180, 173, 173);
+  margin: 0 0 10px 0;
+}
+
+.popup__button-route {
+  border: none;
+  background: rgb(240, 125, 125);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.popup__button-route:hover {
+  opacity: .5;
+}
+
+.popup::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

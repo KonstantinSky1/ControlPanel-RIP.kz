@@ -1,0 +1,47 @@
+.bulkUpload {
+  padding: 50px 0 50px 0;
+}
+
+.bulkUpload__container {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 90%;
+}
+
+.bulkUpload__title {
+  margin: 0 auto 20px;
+  width: fit-content;
+  font-weight: 700;
+  font-size: 1.5em;
+}
+
+.bulkUpload__fileUpload-block {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.bulkUpload__fileUpload-pickfile-button {
+  background-color: rgb(6, 170, 88);
+  color: #fff;
+  padding: 7px 5px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.bulkUpload__fileUpload-pickfile-button:hover {
+  opacity: .5;
+}
+
+.bulkUpload__fileUpload-pickfile-button:active {
+  top: 1px;
+}
+
+.bulkUpload__fileUpload-fileInput-hidden {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}

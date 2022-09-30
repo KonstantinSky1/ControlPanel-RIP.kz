@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { useLocation } from "react-router-dom";
 
-import 'mapbox-gl/dist/mapbox-gl.css';
 import './ControlPanel.css';
 
 import { useFormWithValidation } from '../../hooks/UseForm.js';
 import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import generateUniqId from '../../utils/generateUniqId.js';
-import Map, { Marker, Popup } from 'react-map-gl';
-import markerPic from '../../images/icons/iconMarker.png';
+import PageNavigation from '../PageNavigation/PageNavigation.jsx';
+import Mapbox from '../Mapbox/Mapbox.jsx';
 
 function ControlPanel() {
-  const regExCoordinates = "^[0-9-.]*$"
+  const regExCoordinates = "^[0-9-.]*$";
+
+  const location = useLocation();
 
   const defaultData = {
     name: '',
@@ -39,7 +41,6 @@ function ControlPanel() {
     longitude: 76.9286100,
     zoom: 11
   });
-  const [selectedPost, setSelectedPost] = useState(null);
   const [ripData, setRipData] = useState({
     name: '',
     surname: '',
@@ -58,20 +59,6 @@ function ControlPanel() {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const filePicker = useRef(null);
-
-  useEffect(() => {
-    const handleClosePopup = (event) => {
-      if (event.key === "Escape") {
-        setSelectedPost(null);
-      }
-    }
-
-    window.addEventListener('keydown', handleClosePopup);
-
-    return () => {
-      window.removeEventListener('keydown', handleClosePopup);
-    }
-  }, []);
 
   function fileUploadHandleChange(event) {
     event.preventDefault();
@@ -140,6 +127,9 @@ function ControlPanel() {
     <div className="controlPanel">
       <div className="controlPanel__container">
         <h2 className="controlPanel__title">RIP.kz</h2>
+        <PageNavigation
+          location={location}
+        />
         <form
           onSubmit={handleSubmit}
           noValidate
@@ -371,67 +361,11 @@ function ControlPanel() {
           !!uniqId && (<p className="controlPanel__uniqId-text">Ваш уникальный id: <span className="controlPanel__uniqId-number">{uniqId}</span></p>)
         }
 
-        <div className="mapbox-block">
-          <Map
-            {...viewState}
-            onMove={evt => setViewState(evt.viewState)}
-            style={{width: '100%', height: '100vh'}}
-            mapStyle="mapbox://styles/mapbox/streets-v9"
-            mapboxAccessToken="pk.eyJ1Ijoia29uc3RhbnRpbnNreSIsImEiOiJjbDhiYW8zNDQwcDBjM3FuM3MwMXg3MDBqIn0.4WDqm5CpXmykKPm_b1W-LA"
-            id="mapbox-map"
-          >
-            <Marker
-              longitude={ripData.cemetery_coordinates_longitude}
-              latitude={ripData.cemetery_coordinates_latitude}
-              anchor="bottom"
-            >
-              <button
-                onClick={(e) => setSelectedPost(ripData)}
-                type="button"
-                className="markerButton"
-              >
-                <img
-                  src={markerPic}
-                  alt="Marker Icon"
-                />
-              </button>
-            </Marker>
-            {
-              selectedPost ? (
-                <Popup
-                  closeOnClick={false}
-                  longitude={ripData.cemetery_coordinates_longitude}
-                  latitude={ripData.cemetery_coordinates_latitude}
-                  onClose={() => setSelectedPost(null)}
-                >
-                  <div className="popup">
-                    <div className="popup__text-block">
-                      <div className="popup__text-block-title">
-                        <p>Имя:</p>
-                        <p className="popup__text">{ripData.name}</p>
-                      </div>
-                      <div className="popup__text-block-title">
-                        <p>Фамилия:</p>
-                        <p className="popup__text">{ripData.surname}</p>
-                      </div>
-                      <div className="popup__text-block-title">
-                        <p>Дата рождения:</p>
-                        <p className="popup__text">{ripData.birthday}</p>
-                      </div>
-                      <div className="popup__text-block-title">
-                        <p>Дата смерти:</p>
-                        <p className="popup__text">{ripData.date_of_death}</p>
-                      </div>
-                      <p className="popup__small-text">id: {ripData.id}</p>
-                    </div>
-                    <button type="button" className="popup__button-route">Проложить маршрут</button>
-                  </div>
-                </Popup>
-              ) : null
-            }
-          </Map>
-          <a href="#controlPanel-form" className="link-up"></a>
-        </div>
+        <Mapbox
+          viewState={viewState}
+          setViewState={setViewState}
+          ripData={ripData}
+        />
       </div>
     </div>
   );

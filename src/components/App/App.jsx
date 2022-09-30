@@ -1,13 +1,24 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import './App.css';
 
 import ControlPanel from '../ControlPanel/ControlPanel.jsx';
+import Bulkupload from '../Bulkupload/Bulkupload.jsx';
 
 function App() {
   return (
     <>
-      <ControlPanel />
+      <Switch>
+        <Route path="/conrolpanel">
+          <ControlPanel />
+        </Route>
+
+        <Route path="/bulkupload">
+          <Bulkupload />
+        </Route>
+      </Switch>
+      
     </>
   );
 }
