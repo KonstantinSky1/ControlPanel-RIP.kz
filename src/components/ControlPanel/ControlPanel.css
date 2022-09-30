@@ -230,4 +230,8 @@
   .controlPanel__form {
     width: 260px;
   }
+
+  .input-small-text::placeholder {
+    font-size: .6em;
+  }
 }

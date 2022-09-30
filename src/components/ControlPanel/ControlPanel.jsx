@@ -249,12 +249,12 @@ function ControlPanel() {
             <label className="controlPanel__form-label">
               <span className="controlPanel__form-label-span">Координаты кладбища широта:</span>
               <input
-                className="controlPanel__form-input"
+                className="controlPanel__form-input input-small-text"
                 onChange={handleChange}
                 value={values.burial_coordinates_latitude}
                 type="text"
                 name="burial_coordinates_latitude"
-                placeholder="Введите в формате: ХХ.ХХХХХХХ"
+                placeholder="Введите в формате: ХХ.ХХХХХХХ (например: 43.2566700)"
                 minLength="1"
                 required
                 pattern={regExCoordinates}
@@ -268,12 +268,12 @@ function ControlPanel() {
             <label className="controlPanel__form-label">
               <span className="controlPanel__form-label-span">Координаты кладбища долгота:</span>
               <input
-                className="controlPanel__form-input"
+                className="controlPanel__form-input input-small-text"
                 onChange={handleChange}
                 value={values.burial_coordinates_longitude}
                 type="text"
                 name="burial_coordinates_longitude"
-                placeholder="Введите в формате: ХХ.ХХХХХХХ"
+                placeholder="Введите в формате: ХХ.ХХХХХХХ (например: 76.9286100)"
                 minLength="1"
                 required
                 pattern={regExCoordinates}
@@ -287,12 +287,12 @@ function ControlPanel() {
             <label className="controlPanel__form-label">
               <span className="controlPanel__form-label-span">Координаты захоронения широта:</span>
               <input
-                className="controlPanel__form-input"
+                className="controlPanel__form-input input-small-text"
                 onChange={handleChange}
                 value={values.cemetery_coordinates_latitude}
                 type="text"
                 name="cemetery_coordinates_latitude"
-                placeholder="Введите в формате: ХХ.ХХХХХХХ"
+                placeholder="Введите в формате: ХХ.ХХХХХХХ (например: 43.2566700)"
                 minLength="1"
                 required
                 pattern={regExCoordinates}
@@ -306,12 +306,12 @@ function ControlPanel() {
             <label className="controlPanel__form-label">
               <span className="controlPanel__form-label-span">Координаты захоронения долгота:</span>
               <input
-                className="controlPanel__form-input"
+                className="controlPanel__form-input input-small-text"
                 onChange={handleChange}
                 value={values.cemetery_coordinates_longitude}
                 type="text"
                 name="cemetery_coordinates_longitude"
-                placeholder="Введите в формате: ХХ.ХХХХХХХ"
+                placeholder="Введите в формате: ХХ.ХХХХХХХ (например: 76.9286100)"
                 minLength="1"
                 required
                 pattern={regExCoordinates}
