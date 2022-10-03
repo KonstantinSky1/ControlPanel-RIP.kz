@@ -4,6 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './Mapbox.css';
 
 import Map, { Marker, Popup } from 'react-map-gl';
+
 import markerPic from '../../images/icons/iconMarker.png';
 
 function Mapbox({ viewState, setViewState, ripData }) {

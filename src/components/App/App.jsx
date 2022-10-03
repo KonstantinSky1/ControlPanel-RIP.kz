@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <Switch>
-        <Route path="/conrolpanel">
+        <Route exact path="/">
           <ControlPanel />
         </Route>
 
