@@ -20,20 +20,25 @@
   margin: 0 auto;
 }
 
-.bulkUpload__fileUpload-pickfile-button {
+.bulkUpload__button {
   background-color: rgb(6, 170, 88);
   color: #fff;
   padding: 7px 5px;
   border-radius: 5px;
   position: relative;
+  margin: 0 0 20px 0;
 }
 
-.bulkUpload__fileUpload-pickfile-button:hover {
+.bulkUpload__button:hover {
   opacity: .5;
 }
 
-.bulkUpload__fileUpload-pickfile-button:active {
+.bulkUpload__button:active {
   top: 1px;
+}
+
+.bulkUpload__button_type_margin {
+  margin: 20px 0 20px 0;
 }
 
 .bulkUpload__fileUpload-fileInput-hidden {

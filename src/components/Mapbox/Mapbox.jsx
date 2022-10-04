@@ -7,7 +7,7 @@ import Map, { Marker, Popup } from 'react-map-gl';
 
 import markerPic from '../../images/icons/iconMarker.png';
 
-function Mapbox({ viewState, setViewState, ripData }) {
+function Mapbox({ viewState, setViewState, ripData, location }) {
   const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
@@ -34,24 +34,29 @@ function Mapbox({ viewState, setViewState, ripData }) {
       mapboxAccessToken="pk.eyJ1Ijoia29uc3RhbnRpbnNreSIsImEiOiJjbDhiYW8zNDQwcDBjM3FuM3MwMXg3MDBqIn0.4WDqm5CpXmykKPm_b1W-LA"
       id="mapbox-map"
     >
-      <Marker
-        longitude={ripData.cemetery_coordinates_longitude}
-        latitude={ripData.cemetery_coordinates_latitude}
-        anchor="bottom"
-      >
-        <button
-          onClick={(e) => setSelectedPost(ripData)}
-          type="button"
-          className="markerButton"
-        >
-          <img
-            src={markerPic}
-            alt="Marker Icon"
-          />
-        </button>
-      </Marker>
       {
-        selectedPost ? (
+        location.pathname === '/' && (
+          <Marker
+            longitude={ripData.cemetery_coordinates_longitude}
+            latitude={ripData.cemetery_coordinates_latitude}
+            anchor="bottom"
+          >
+            <button
+              onClick={(e) => setSelectedPost(ripData)}
+              type="button"
+              className="markerButton"
+            >
+              <img
+                src={markerPic}
+                alt="Marker Icon"
+              />
+            </button>
+          </Marker>
+        )
+      }
+
+      {
+        (selectedPost && location.pathname === '/') ? (
           <Popup
             closeOnClick={false}
             longitude={ripData.cemetery_coordinates_longitude}
@@ -81,6 +86,30 @@ function Mapbox({ viewState, setViewState, ripData }) {
               <button type="button" className="popup__button-route">Проложить маршрут</button>
             </div>
           </Popup>
+        ) : null
+      }
+
+      {
+        (ripData && location.pathname === '/bulkupload') ? (
+          ripData.map((item, index) => (
+            <Marker
+              key={index}
+              longitude={item.cemetery_coordinates_longitude}
+              latitude={item.cemetery_coordinates_latitude}
+              anchor="bottom"
+            >
+              <button
+                onClick={(e) => setSelectedPost(item)}
+                type="button"
+                className="markerButton"
+              >
+                <img
+                  src={markerPic}
+                  alt="Marker Icon"
+                />
+              </button>
+            </Marker>
+          ))
         ) : null
       }
     </Map>
