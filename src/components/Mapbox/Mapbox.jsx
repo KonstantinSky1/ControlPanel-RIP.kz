@@ -59,29 +59,29 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
         (selectedPost && location.pathname === '/') ? (
           <Popup
             closeOnClick={false}
-            longitude={ripData.cemetery_coordinates_longitude}
-            latitude={ripData.cemetery_coordinates_latitude}
+            longitude={selectedPost.cemetery_coordinates_longitude}
+            latitude={selectedPost.cemetery_coordinates_latitude}
             onClose={() => setSelectedPost(null)}
           >
             <div className="popup">
               <div className="popup__text-block">
                 <div className="popup__text-block-title">
                   <p>Имя:</p>
-                  <p className="popup__text">{ripData.name}</p>
+                  <p className="popup__text">{selectedPost.name}</p>
                 </div>
                 <div className="popup__text-block-title">
                   <p>Фамилия:</p>
-                  <p className="popup__text">{ripData.surname}</p>
+                  <p className="popup__text">{selectedPost.surname}</p>
                 </div>
                 <div className="popup__text-block-title">
                   <p>Дата рождения:</p>
-                  <p className="popup__text">{ripData.birthday}</p>
+                  <p className="popup__text">{selectedPost.birthday}</p>
                 </div>
                 <div className="popup__text-block-title">
                   <p>Дата смерти:</p>
-                  <p className="popup__text">{ripData.date_of_death}</p>
+                  <p className="popup__text">{selectedPost.date_of_death}</p>
                 </div>
-                <p className="popup__small-text">id: {ripData.id}</p>
+                <p className="popup__small-text">id: {selectedPost.id}</p>
               </div>
               <button type="button" className="popup__button-route">Проложить маршрут</button>
             </div>
@@ -112,8 +112,38 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
           ))
         ) : null
       }
+
+      {
+        (selectedPost && location.pathname === '/bulkupload') ? (
+          <Popup
+            closeOnClick={false}
+            longitude={selectedPost.cemetery_coordinates_longitude}
+            latitude={selectedPost.cemetery_coordinates_latitude}
+            onClose={() => setSelectedPost(null)}
+          >
+            <div className="popup">
+              <div className="popup__text-block">
+                <div className="popup__text-block-title">
+                  <p>Имя:</p>
+                  <p className="popup__text">{selectedPost.name}</p>
+                </div>
+                <div className="popup__text-block-title">
+                  <p>Фамилия:</p>
+                  <p className="popup__text">{selectedPost.surname}</p>
+                </div>
+              </div>
+              <button type="button" className="popup__button-route">Проложить маршрут</button>
+            </div>
+          </Popup>
+        ) : null
+      }
     </Map>
-    <a href="#controlPanel-form" className="link-up"></a>
+    {
+      (location.pathname === '/') && <a href="#controlPanel-form" className="link-up"></a>
+    }
+    {
+      (location.pathname === '/bulkupload') && <a href="#bulkUpload__title" className="link-up"></a>
+    }
   </div>
   );
 }

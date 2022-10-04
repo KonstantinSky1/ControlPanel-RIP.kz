@@ -5,7 +5,7 @@ import './TableBody.css';
 function TableBody({ body }) {
   let arr = (Object.entries(body)).sort();
   return (
-    <tr>
+    <tr className="tr">
       {
         arr && arr.map((item, index) => {
           return <td

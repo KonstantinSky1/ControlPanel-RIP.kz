@@ -6,6 +6,8 @@ import { read, utils } from 'xlsx';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Bulkupload.css';
 
+import { Pagination } from '@mui/material';
+
 import PageNavigation from '../PageNavigation/PageNavigation.jsx';
 import TableTitle from '../TableTitle/TableTitle.jsx';
 import TableBody from '../TableBody/TableBody.jsx';
@@ -26,6 +28,12 @@ function Bulkupload() {
     zoom: 11
   });
   const [ripData, setRipData] = useState([]);
+  //Пагинация
+  const [page, setPage] = useState(1);
+  const [pageQuantity, setPageQuantity] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [currentItems, setCurrentItems] = useState([]);
+  //========
 
   const filePicker = useRef(null);
 
@@ -76,7 +84,8 @@ function Bulkupload() {
   return (
     <div className="bulkUpload">
       <div className="bulkUpload__container">
-        <h2 className="bulkUpload__title">RIP.kz</h2>
+        {/* есть якорная ссылка на элемент h2: */}
+        <h2 className="bulkUpload__title" id="bulkUpload__title">RIP.kz</h2>
         <PageNavigation
           location={location}
         />
@@ -100,7 +109,7 @@ function Bulkupload() {
                 <thead>
                   <tr>
                     {
-                      tableTitles && tableTitles.sort().map((title, index) => {
+                      (tableTitles.length > 0) && tableTitles.sort().map((title, index) => {
                         return <TableTitle
                                 key={index}
                                 title={title[1]}
@@ -111,7 +120,7 @@ function Bulkupload() {
                 </thead>
                 <tbody>
                   {
-                    tableBody && tableBody.map((body, index) => {
+                    (tableBody.length > 0) && tableBody.map((body, index) => {
                       return <TableBody
                               key={index}
                               body={body}
@@ -124,7 +133,10 @@ function Bulkupload() {
               <button
                 type="button"
                 className="bulkUpload__button bulkUpload__button_type_margin"
-                onClick={handleShowMarkers}
+                onClick={() => {
+                  handleShowMarkers();
+                  document.location.href = '#mapbox-map';
+                }}
               >
                 Показать на карте
               </button>

@@ -10,6 +10,7 @@ function App() {
   return (
     <>
       <Switch>
+        {/* в компонентах MapBox и PageNavigation есть указание путей / и  /bulkupload*/}
         <Route exact path="/">
           <ControlPanel />
         </Route>
