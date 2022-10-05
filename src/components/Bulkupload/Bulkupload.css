@@ -41,6 +41,10 @@
   margin: 20px 0 20px 0;
 }
 
+.bulkUpload__button_type_left-margin {
+  margin: 0 0 0 20px;
+}
+
 .bulkUpload__fileUpload-fileInput-hidden {
   opacity: 0;
   height: 0;
@@ -57,4 +61,9 @@
   vertical-align: top;
   width: 100%;
   margin: 20px 0 0 0;
+}
+
+.filename {
+  color: red;
+  font-weight: 700;
 }

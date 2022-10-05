@@ -34,6 +34,7 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
       mapboxAccessToken="pk.eyJ1Ijoia29uc3RhbnRpbnNreSIsImEiOiJjbDhiYW8zNDQwcDBjM3FuM3MwMXg3MDBqIn0.4WDqm5CpXmykKPm_b1W-LA"
       id="mapbox-map"
     >
+      {/* Маркер для главной страницы */}
       {
         location.pathname === '/' && (
           <Marker
@@ -54,7 +55,7 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
           </Marker>
         )
       }
-
+      {/* Попап для маркера главной страницы */}
       {
         (selectedPost && location.pathname === '/') ? (
           <Popup
@@ -88,7 +89,7 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
           </Popup>
         ) : null
       }
-
+      {/* Массив маркеров для страницы bulkupload */}
       {
         (ripData && location.pathname === '/bulkupload') ? (
           ripData.map((item, index) => (
@@ -112,7 +113,7 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
           ))
         ) : null
       }
-
+      {/* Попап для маркера страницы bulkupload*/}
       {
         (selectedPost && location.pathname === '/bulkupload') ? (
           <Popup
@@ -132,7 +133,7 @@ function Mapbox({ viewState, setViewState, ripData, location }) {
                   <p className="popup__text">{selectedPost.surname}</p>
                 </div>
               </div>
-              <button type="button" className="popup__button-route">Проложить маршрут</button>
+              {/* <button type="button" className="popup__button-route">Проложить маршрут</button> */}
             </div>
           </Popup>
         ) : null

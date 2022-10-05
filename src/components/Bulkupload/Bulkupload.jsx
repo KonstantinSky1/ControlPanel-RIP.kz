@@ -19,6 +19,8 @@ import Mapbox from '../Mapbox/Mapbox.jsx';
 function Bulkupload() {
   const location = useLocation();
 
+  const filePicker = useRef(null);
+
   const [selectedFile, setSelectedFile] = useState([]);
   const [tableTitles, setTableTitles] = useState([]);
   const [tableBody, setTableBody] = useState([]);
@@ -28,16 +30,31 @@ function Bulkupload() {
     zoom: 11
   });
   const [ripData, setRipData] = useState([]);
+  const [fileName, setfileName] = useState('');
+  const [resetState, setResetState] = useState(false);
+
   //Пагинация
   const [page, setPage] = useState(1);
   const [pageQuantity, setPageQuantity] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
+  const itemsPerPage = 10; // количество строк в таблице на каждой странице
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+
+    setCurrentItems(tableBody.slice(itemOffset, endOffset));
+    setPageQuantity(Math.ceil(tableBody.length / itemsPerPage));
+  }, [tableBody, itemsPerPage, itemOffset]);
+
+  function handleChangePage(num) {
+    const newOffset = ((num-1) * itemsPerPage) % tableBody.length;
+
+    setItemOffset(newOffset);
+  }
   //========
 
-  const filePicker = useRef(null);
-
-  //при загрузке файла, записываем в tableTitles массив заголовков, записываем в tableBody массив объектов после заголовков
+  //при загрузке файла, записываем в tableTitles объект с индексом 0, и записываем в tableBody остальные объекты начиная с индекса 1
   useEffect(() => {
     if (selectedFile.length > 0) {
       setTableTitles(createArrayTitles(selectedFile));
@@ -45,12 +62,14 @@ function Bulkupload() {
     }
   }, [selectedFile]);
 
-  function handleImport(event) {
+  function handleImport(event) { //на onChange инпута получаем данные с файла Excel
     const files = event.target.files;
 
     if (files.length) {
       const file = files[0];
+      setfileName(file.name); //название файла записываем в стейт fileName
       const reader = new FileReader();
+
       reader.onload = (event) => {
         const wb = read(event.target.result);
         const sheets = wb.SheetNames;
@@ -81,6 +100,26 @@ function Bulkupload() {
     }
   }
 
+  function handleReset() {
+    setResetState(true);
+  }
+
+  useEffect(() => {
+    if (resetState) {
+      setSelectedFile([]);
+      // handleImport({});
+      setTableTitles([]);
+      setTableBody([]);
+      setRipData([]);
+      setResetState(false);
+      setfileName('');
+      setPage(1);
+      setPageQuantity(0);
+      setItemOffset(0);
+      setCurrentItems([]);
+    }
+  }, [resetState]);
+
   return (
     <div className="bulkUpload">
       <div className="bulkUpload__container">
@@ -91,6 +130,7 @@ function Bulkupload() {
         />
         <div className="bulkUpload__fileUpload-block">
           <button onClick={handlePickFile} className="bulkUpload__button">Выбрать файл</button>
+          <button onClick={handleReset} className="bulkUpload__button bulkUpload__button_type_left-margin">Сбросить</button>
           <input
             name="upload"
             id="upload"
@@ -105,6 +145,7 @@ function Bulkupload() {
         {
           (selectedFile.length>0) && (
             <>
+              <p>Название файла: <span className="filename">{fileName}</span></p>
               <table className="table">
                 <thead>
                   <tr>
@@ -120,7 +161,8 @@ function Bulkupload() {
                 </thead>
                 <tbody>
                   {
-                    (tableBody.length > 0) && tableBody.map((body, index) => {
+                    // currentItems - это slice от tableBody для Пагинации
+                    (currentItems.length > 0) && currentItems.map((body, index) => {
                       return <TableBody
                               key={index}
                               body={body}
@@ -129,6 +171,24 @@ function Bulkupload() {
                   }
                 </tbody>
               </table>
+              {/* Пагинация */}
+              {
+                !!pageQuantity && (
+                  <Pagination
+                    count={pageQuantity}
+                    page={page}
+                    size="small"
+                    sx={{
+                      marginX: 'auto',
+                      marginY: 2,
+                      width: 'fit-content'
+                    }}
+                    onChange={(_, num) => {
+                      handleChangePage(num)
+                      setPage(num)}}
+                  />
+                )
+              }
 
               <button
                 type="button"
