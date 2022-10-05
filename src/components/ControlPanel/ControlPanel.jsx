@@ -8,6 +8,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import generateUniqId from '../../utils/generateUniqId.js';
 import PageNavigation from '../PageNavigation/PageNavigation.jsx';
 import Mapbox from '../Mapbox/Mapbox.jsx';
+import api from '../../utils/Api.js';
 
 function ControlPanel() {
   const regExCoordinates = "^[0-9-+.]*$";
@@ -92,9 +93,10 @@ function ControlPanel() {
 
     let fileImage = selectedFile;
     let id = generateUniqId();
-    // добавить проверку: Если есть такой id в общей базе, то запустить функцию еще раз ?
 
     setUniqId(id);
+
+    // Для отображения данных на карте:
     setRipData({
       name,
       surname,
@@ -114,12 +116,16 @@ function ControlPanel() {
     // т.к. файл не отправляется через JSON
 
     let formData = new FormData();
-    // formData.append('fileImage', fileImage); //брать все данные с ripData
+    formData.append('fileImage', fileImage);
 
     setViewState({
       latitude: +cemetery_coordinates_latitude,
       longitude: +cemetery_coordinates_longitude
     });
+
+    api.postFile(formData)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
 
     resetForm();
     setSelectedFile(null);

@@ -7,7 +7,7 @@ export default function addKeysToObjects(arr) {
     arr.forEach(obj => {
       for (let i=1; i<standart.length; i++) {
         if (!obj.hasOwnProperty(standart[i])) {
-          obj[standart[i]] = '';
+          obj[standart[i]] = 0;
         }
       }
     });

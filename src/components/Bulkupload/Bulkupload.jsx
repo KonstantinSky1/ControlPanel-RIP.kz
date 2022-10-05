@@ -15,6 +15,7 @@ import createArrayTitles from '../../utils/createArrayTitles.js';
 import addKeysToObjects from '../../utils/addKeysToObjects.js';
 import createArrayBody from '../../utils/createArrayBody.js';
 import Mapbox from '../Mapbox/Mapbox.jsx';
+import api from '../../utils/Api.js';
 
 function Bulkupload() {
   const location = useLocation();
@@ -30,8 +31,10 @@ function Bulkupload() {
     zoom: 11
   });
   const [ripData, setRipData] = useState([]);
+  const [ripSubmitData, setRipSubmitData] = useState([]);
   const [fileName, setfileName] = useState('');
   const [resetState, setResetState] = useState(false);
+  const [disableSubmitButton, setDisableSubmitButton] = useState(false);
 
   //Пагинация
   const [page, setPage] = useState(1);
@@ -52,13 +55,30 @@ function Bulkupload() {
 
     setItemOffset(newOffset);
   }
-  //========
+
+  // Сброс файла
+  useEffect(() => {
+    if (resetState) {
+      setSelectedFile([]);
+      setTableTitles([]);
+      setTableBody([]);
+      setRipData([]);
+      setRipSubmitData([]);
+      setResetState(false);
+      setfileName('');
+      setPage(1);
+      setPageQuantity(0);
+      setItemOffset(0);
+      setCurrentItems([]);
+    }
+  }, [resetState]);
 
   //при загрузке файла, записываем в tableTitles объект с индексом 0, и записываем в tableBody остальные объекты начиная с индекса 1
   useEffect(() => {
     if (selectedFile.length > 0) {
       setTableTitles(createArrayTitles(selectedFile));
       setTableBody(createArrayBody(selectedFile));
+      setRipSubmitData(selectedFile.slice(1));
     }
   }, [selectedFile]);
 
@@ -90,9 +110,10 @@ function Bulkupload() {
     //При клике на button, по факту клик производим на input
     filePicker.current.click();
   }
-
+  
+ // показать маркеры на карте
   function handleShowMarkers() {
-    //при клике на кнопку собираем данные с файла selectedFile в стейт ripData
+    //при клике на кнопку собираем данные (заголовок исключаем) с файла selectedFile в стейт ripData
     if (selectedFile.length > 0) {
       const arr = selectedFile.slice(1);
       setRipData(arr);
@@ -104,21 +125,23 @@ function Bulkupload() {
     setResetState(true);
   }
 
-  useEffect(() => {
-    if (resetState) {
-      setSelectedFile([]);
-      // handleImport({});
-      setTableTitles([]);
-      setTableBody([]);
-      setRipData([]);
-      setResetState(false);
-      setfileName('');
-      setPage(1);
-      setPageQuantity(0);
-      setItemOffset(0);
-      setCurrentItems([]);
-    }
-  }, [resetState]);
+  function bulkupload(submitData) {
+     //блокируем кнопку сабмита
+    setDisableSubmitButton(true);
+
+    return api.postExcelData(submitData)
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+      .finally(() => setDisableSubmitButton(false));
+  }
+
+   // отправка данных на сервер
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    bulkupload(ripSubmitData);
+    handleReset();
+  }
 
   return (
     <div className="bulkUpload">
@@ -142,6 +165,7 @@ function Bulkupload() {
             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           />
         </div>
+        {/* Таблица с пагинацией: */}
         {
           (selectedFile.length>0) && (
             <>
@@ -200,9 +224,18 @@ function Bulkupload() {
               >
                 Показать на карте
               </button>
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={disableSubmitButton}
+                className="bulkUpload__button bulkUpload__button_type_left-margin"
+              >
+                Отправить на сервер
+              </button>
             </>
           )
         }
+        {/* Карта MapBox: */}
         <Mapbox
           viewState={viewState}
           setViewState={setViewState}
