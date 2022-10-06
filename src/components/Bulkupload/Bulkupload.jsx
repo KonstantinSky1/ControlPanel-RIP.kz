@@ -16,6 +16,8 @@ import addKeysToObjects from '../../utils/addKeysToObjects.js';
 import createArrayBody from '../../utils/createArrayBody.js';
 import Mapbox from '../Mapbox/Mapbox.jsx';
 import api from '../../utils/Api.js';
+import validateCemeteryCoordinates from '../../utils/validateCemeteryCoordinates.js';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 
 function Bulkupload() {
   const location = useLocation();
@@ -35,14 +37,17 @@ function Bulkupload() {
   const [fileName, setfileName] = useState('');
   const [resetState, setResetState] = useState(false);
   const [disableSubmitButton, setDisableSubmitButton] = useState(false);
+  const [errorValidation, setErrorValidation] = useState(false);
 
   //Пагинация
   const [page, setPage] = useState(1);
   const [pageQuantity, setPageQuantity] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
-  const itemsPerPage = 10; // количество строк в таблице на каждой странице
+  // количество строк в таблице на каждой странице
+  const itemsPerPage = 10;
 
+  //Пагинация
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
 
@@ -70,24 +75,39 @@ function Bulkupload() {
       setPageQuantity(0);
       setItemOffset(0);
       setCurrentItems([]);
+      setDisableSubmitButton(false);
+      setErrorValidation(false);
     }
   }, [resetState]);
 
-  //при загрузке файла, записываем в tableTitles объект с индексом 0, и записываем в tableBody остальные объекты начиная с индекса 1
+  //при загрузке файла, записываем в tableTitles объект с индексом 0, записываем в tableBody остальные объекты начиная с индекса 1
   useEffect(() => {
     if (selectedFile.length > 0) {
       setTableTitles(createArrayTitles(selectedFile));
       setTableBody(createArrayBody(selectedFile));
-      setRipSubmitData(selectedFile.slice(1));
+
+      // Если координаты захоронения валидны - записываем файл в RipSubmitData, в противном случае блокируем кнопку Сабмита и выводим сообщение о ошибке
+      if (validateCemeteryCoordinates(selectedFile.slice(1))) {
+        setRipSubmitData(selectedFile.slice(1));
+      } else {
+        setDisableSubmitButton(true);
+        //вывести сообщение
+        setErrorValidation(true);
+      }
     }
   }, [selectedFile]);
 
-  function handleImport(event) { //на onChange инпута получаем данные с файла Excel
+  //на onChange инпута получаем данные с файла Excel
+  function handleImport(event) {
+    setDisableSubmitButton(false);
+    setErrorValidation(false);
+
     const files = event.target.files;
 
     if (files.length) {
       const file = files[0];
-      setfileName(file.name); //название файла записываем в стейт fileName
+      //название файла записываем в стейт fileName
+      setfileName(file.name);
       const reader = new FileReader();
 
       reader.onload = (event) => {
@@ -97,6 +117,7 @@ function Bulkupload() {
         if (sheets.length) {
           const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
 
+          // записываем данные файла в стейт selectedFile
           setSelectedFile(addKeysToObjects(rows));
         }
       }
@@ -121,10 +142,12 @@ function Bulkupload() {
     }
   }
 
+  // устанавливаем стейт true, чтобы сбросить данные файла и пагинации в useEffect
   function handleReset() {
     setResetState(true);
   }
 
+  // функция для отправки запроса на сервер
   function bulkupload(submitData) {
      //блокируем кнопку сабмита
     setDisableSubmitButton(true);
@@ -135,7 +158,7 @@ function Bulkupload() {
       .finally(() => setDisableSubmitButton(false));
   }
 
-   // отправка данных на сервер
+   // отправка данных на сервер при нажатии на кнопку Сабмита
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -213,6 +236,10 @@ function Bulkupload() {
                   />
                 )
               }
+              {/* Сообщение в случае невалидных данных координат захоронения */}
+              {
+                errorValidation && <ErrorMessage errorMessage='Координаты захоронения в файле должны быть в формате: ХХ.ХХХХХХХ (например: 43.2566700)' style={{color: 'red', display: 'block', fontWeight: '700'}} />
+              }
 
               <button
                 type="button"
@@ -228,6 +255,7 @@ function Bulkupload() {
                 type="submit"
                 onClick={handleSubmit}
                 disabled={disableSubmitButton}
+                style={disableSubmitButton ? {backgroundColor: '#b4b6b8', cursor: 'auto', opacity: '1', top: '0'} : null}
                 className="bulkUpload__button bulkUpload__button_type_left-margin"
               >
                 Отправить на сервер
@@ -236,12 +264,12 @@ function Bulkupload() {
           )
         }
         {/* Карта MapBox: */}
-        <Mapbox
+        {/* <Mapbox
           viewState={viewState}
           setViewState={setViewState}
           ripData={ripData}
           location={location}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -1,0 +1,1 @@
+Для успешной работы карты Mapbox на сервере перед build, нужно исключить Mapbox из сборки. В файле /node_modules/react-scripts/config/webpack.config.js найти babel-loader и в options в конце добавить ignore: [ './node_modules/mapbox-gl/dist/mapbox-gl.js' ],

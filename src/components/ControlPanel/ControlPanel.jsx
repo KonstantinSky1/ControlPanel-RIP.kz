@@ -8,12 +8,10 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import generateUniqId from '../../utils/generateUniqId.js';
 import PageNavigation from '../PageNavigation/PageNavigation.jsx';
 import Mapbox from '../Mapbox/Mapbox.jsx';
-import api from '../../utils/Api.js';
+// import api from '../../utils/Api.js';
 
 function ControlPanel() {
-  const regExCoordinates = "^[0-9-+.]*$";
-  // const regExCoordinatesLongitude = "^[\-\+]?(0(\.\d{1,10})?|([1-9](\d)?)(\.\d{1,10})?|1[0-7]\d{1}(\.\d{1,10})?|180\.0{1,10})$";
-  // const regExCoordinatesLatitude = "^[\-\+]?((0|([1-8]\d?))(\.\d{1,10})?|90(\.0{1,10})?)$";
+  const regExCoordinates = "^[\-\+]?[0-9]+\.[0-9]+$";
 
   const location = useLocation();
 
@@ -123,9 +121,9 @@ function ControlPanel() {
       longitude: +cemetery_coordinates_longitude
     });
 
-    api.postFile(formData)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+    // api.postFile(formData)
+    //   .then(res => console.log(res))
+    //   .catch(err => console.log(err));
 
     resetForm();
     setSelectedFile(null);
