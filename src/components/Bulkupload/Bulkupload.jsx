@@ -147,8 +147,8 @@ function Bulkupload() {
     setResetState(true);
   }
 
-  // функция для отправки запроса на сервер
-  function bulkupload(submitData) {
+  // функция для отправки POST запроса на сервер
+  function postExcel(submitData) {
      //блокируем кнопку сабмита
     setDisableSubmitButton(true);
 
@@ -156,13 +156,18 @@ function Bulkupload() {
       .then(res => console.log(res))
       .catch(err => console.log(err))
       .finally(() => setDisableSubmitButton(false));
+
+    // return api.putExcelData(submitData)
+    //   .then(res => console.log(res))
+    //   .catch(err => console.log(err))
+    //   .finally(() => setDisableSubmitButton(false));
   }
 
    // отправка данных на сервер при нажатии на кнопку Сабмита
   function handleSubmit(e) {
     e.preventDefault();
 
-    bulkupload(ripSubmitData);
+    postExcel(ripSubmitData);
     handleReset();
   }
 
