@@ -264,12 +264,12 @@ function Bulkupload() {
           )
         }
         {/* Карта MapBox: */}
-        {/* <Mapbox
+        <Mapbox
           viewState={viewState}
           setViewState={setViewState}
           ripData={ripData}
           location={location}
-        /> */}
+        />
       </div>
     </div>
   );
