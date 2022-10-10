@@ -1,0 +1,129 @@
+.service {
+  padding: 50px 0 50px 0;
+}
+
+.service__container {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 90%;
+}
+
+.service__title {
+  margin: 0 auto 20px;
+  width: fit-content;
+  font-weight: 700;
+  font-size: 1.5em;
+}
+
+.service__form {
+  margin: 0 auto;
+  padding: 0 0 10px 0;
+  width: 396px;
+  border: 1px solid rgb(229, 234, 238);
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px 2px #eee;
+  overflow: hidden;
+}
+
+.service__form-inputs-block {
+  margin: 0 0 30px 0;
+}
+
+.service__form-label {
+  display: block;
+  margin: 20px 0 0 0;
+  padding: 0 10px 0 10px;
+}
+
+.service__form-label-span {
+  display: block;
+  margin: 0 0 5px 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.color-red {
+  color: red;
+  font-weight: 700;
+}
+
+.service__form-input {
+  width: 100%;
+  padding: 10px 5px;
+  border: 1px solid rgb(229, 234, 238);
+  border-radius: 5px;
+}
+
+.service__form-input:focus {
+  border-color: rgb(252, 255, 67);
+}
+
+.service__form-textarea {
+  resize: none;
+  width: none;
+  min-height: 120px;
+  overflow: auto;
+}
+
+.service__form-image-block {
+  margin: 20px 0 0 0;
+  padding: 0 10px 0 10px;
+}
+
+.service__form-pickfile-button {
+  background-color: rgb(6, 170, 88);
+  color: #fff;
+  padding: 7px 5px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.service__form-pickfile-button:hover {
+  opacity: .5;
+}
+
+.service__form-pickfile-button:active {
+  top: 1px;
+}
+
+.service__form-image {
+  display: block;
+  max-width: 100%;
+  margin: 10px auto 0;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+.service__form-submit-button-block {
+  padding: 0 10px 0 10px;
+}
+
+.service__form-submit-button {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFFFFF;
+  border: none;
+  background-color: #4285F4;
+  border-radius: 3px;
+  padding: 13px 0 15px 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.service__form-fileInput-hidden {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 450px){
+  .service__form {
+    width: 260px;
+  }
+}

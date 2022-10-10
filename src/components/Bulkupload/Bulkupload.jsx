@@ -156,11 +156,6 @@ function Bulkupload() {
       .then(res => console.log(res))
       .catch(err => console.log(err))
       .finally(() => setDisableSubmitButton(false));
-
-    // return api.putExcelData(submitData)
-    //   .then(res => console.log(res))
-    //   .catch(err => console.log(err))
-    //   .finally(() => setDisableSubmitButton(false));
   }
 
    // отправка данных на сервер при нажатии на кнопку Сабмита
