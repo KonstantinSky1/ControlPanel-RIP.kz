@@ -251,9 +251,6 @@ function ControlPanel() {
                 type="text"
                 name="burial_coordinates_latitude"
                 placeholder="Введите в формате: ХХ.ХХХХХХХ (например: 43.2566700)"
-                minLength="1"
-                required
-                pattern={regExCoordinates}
               />
               <ErrorMessage
                 errorMessage={errors.burial_coordinates_latitude}
@@ -270,9 +267,6 @@ function ControlPanel() {
                 type="text"
                 name="burial_coordinates_longitude"
                 placeholder="Введите в формате: ХХ.ХХХХХХХ (например: 76.9286100)"
-                minLength="1"
-                required
-                pattern={regExCoordinates}
               />
               <ErrorMessage
                 errorMessage={errors.burial_coordinates_longitude}
@@ -281,7 +275,7 @@ function ControlPanel() {
             </label>
 
             <label className="controlPanel__form-label">
-              <span className="controlPanel__form-label-span">Координаты захоронения широта:</span>
+              <span className="controlPanel__form-label-span">Координаты захоронения широта<span className="color-red">*</span>:</span>
               <input
                 className="controlPanel__form-input input-small-text"
                 onChange={handleChange}
@@ -300,7 +294,7 @@ function ControlPanel() {
             </label>
 
             <label className="controlPanel__form-label">
-              <span className="controlPanel__form-label-span">Координаты захоронения долгота:</span>
+              <span className="controlPanel__form-label-span">Координаты захоронения долгота<span className="color-red">*</span>:</span>
               <input
                 className="controlPanel__form-input input-small-text"
                 onChange={handleChange}
